@@ -4,14 +4,21 @@ namespace Cityware\Wmi;
 
 use COM;
 
-class Wmi implements WmiInterface
-{
+class Wmi implements WmiInterface {
+
     /**
      * The host of the current WMI connection.
      *
      * @var string
      */
     private $host;
+
+    /**
+     * The domain of the current WMI connection.
+     *
+     * @var string
+     */
+    private $domain;
 
     /**
      * The username of the user connecting to the host.
@@ -54,14 +61,15 @@ class Wmi implements WmiInterface
      * @param string $host
      * @param string $username
      * @param string $password
+     * @param string $domain
      */
-    public function __construct($host = 'localhost', $username = null, $password = null)
-    {
+    public function __construct($host = 'localhost', $username = null, $password = null, $domain = null) {
         $this->com = new COM($this->script);
-        
+
         $this->setHost($host);
         $this->setUsername($username);
         $this->setPassword($password);
+        $this->setDomain($domain);
     }
 
     /**
@@ -73,10 +81,9 @@ class Wmi implements WmiInterface
      *
      * @return bool|Connection
      */
-    public function connect($namespace = '', $level = 3)
-    {
+    public function connect($namespace = '', $level = 3) {
         // Connect to the host using the specified namespace
-        $connection = $this->com->ConnectServer($this->getHost(), $namespace, $this->getUsername(), $this->password);
+        $connection = $this->com->ConnectServer($this->getHost(), $namespace, $this->getDomain() . $this->getUsername(), $this->password);
 
         if ($connection) {
             // Set the impersonation level
@@ -96,8 +103,7 @@ class Wmi implements WmiInterface
      *
      * @return bool|Connection
      */
-    public function getConnection()
-    {
+    public function getConnection() {
         if ($this->connection instanceof ConnectionInterface) {
             return $this->connection;
         }
@@ -110,9 +116,17 @@ class Wmi implements WmiInterface
      *
      * @return string
      */
-    public function getHost()
-    {
+    public function getHost() {
         return $this->host;
+    }
+
+    /**
+     * Returns the current domain to connect to.
+     *
+     * @return string
+     */
+    public function getDomain() {
+        return (!empty($this->domain)) ? $this->domain . "\\" : null;
     }
 
     /**
@@ -120,8 +134,7 @@ class Wmi implements WmiInterface
      *
      * @return string
      */
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
@@ -132,8 +145,7 @@ class Wmi implements WmiInterface
      *
      * @return $this
      */
-    public function setConnection(ConnectionInterface $connection)
-    {
+    public function setConnection(ConnectionInterface $connection) {
         $this->connection = $connection;
 
         return $this;
@@ -146,9 +158,21 @@ class Wmi implements WmiInterface
      *
      * @return $this
      */
-    public function setHost($host)
-    {
+    public function setHost($host) {
         $this->host = (string) $host;
+
+        return $this;
+    }
+
+    /**
+     * Sets the host to connect to.
+     *
+     * @param string $domain
+     *
+     * @return $this
+     */
+    public function setDomain($domain) {
+        $this->domain = (string) $domain;
 
         return $this;
     }
@@ -160,8 +184,7 @@ class Wmi implements WmiInterface
      *
      * @return $this
      */
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = (string) $username;
 
         return $this;
@@ -174,10 +197,10 @@ class Wmi implements WmiInterface
      *
      * @return $this
      */
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $this->password = (string) $password;
 
         return $this;
     }
+
 }
