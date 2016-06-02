@@ -1,5 +1,6 @@
 {
     "name": "cityware/city-wmi",
+    "type": "library",
     "description": "Cityware Wmi",
     "license": "GPL-3.0",
     "keywords": [
