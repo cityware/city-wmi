@@ -2,36 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Processors/AbstractProcessor.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Exceptions/Query/InvalidFromStatement.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/AbstractModel.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Processors/Registry.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/ConnectionInterface.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/composer.json</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/WmiInterface.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Wmi.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Expressions/Select.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Processors/Software.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Schemas/Namespaces.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Operator.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/BuilderInterface.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Expressions/Where.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Expressions/Within.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Variants/AbstractModel.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Variants/Processor.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Exceptions/Query/InvalidOperatorException.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Variants/LogicalDevice.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Expressions/From.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Processors/Processors.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Builder.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Variants/ManagedSystemElement.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Application.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Processors/HardDisks.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Models/Variants/HardDisk.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Query/Expressions/AbstractExpression.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Connection.php</file>
-            <file>file:/C:/Repository/cityware/city-wmi/src/Schemas/Classes.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
