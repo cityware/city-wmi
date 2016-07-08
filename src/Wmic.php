@@ -1,10 +1,19 @@
 <?php
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 namespace Cityware\Wmi;
 
-use COM;
-
-class Wmi implements WmiInterface {
+/**
+ * Description of Wmic
+ *
+ * @author fsvxavier
+ */
+class Wmic implements WmiInterface {
 
     /**
      * The host of the current WMI connection.
@@ -35,27 +44,6 @@ class Wmi implements WmiInterface {
     private $password;
 
     /**
-     * The current COM instance.
-     *
-     * @var COM
-     */
-    private $com;
-
-    /**
-     * The current COM connection to the host.
-     *
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * The WMI COM script.
-     *
-     * @var string
-     */
-    private $script = 'WbemScripting.SWbemLocator';
-
-    /**
      * Constructor.
      *
      * @param string $host
@@ -64,10 +52,6 @@ class Wmi implements WmiInterface {
      * @param string $domain
      */
     public function __construct($host = 'localhost', $username = null, $password = null, $domain = null) {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $this->com = new COM($this->script);
-        }
-
         $this->setHost($host);
         $this->setUsername($username);
         $this->setPassword($password);
@@ -76,29 +60,20 @@ class Wmi implements WmiInterface {
 
     /**
      * Returns a new connection to the
-     * server using the current COM instance.
+     * server using the current WMIC Linux.
      *
      * @param string $namespace
-     * @param int    $level
      *
      * @return bool|Connection
      */
-    public function connect($namespace = '', $level = 3) {
+    public function connect($namespace = 'root\cimv2') {
+        
+        $namespacePrepared = escapeshellarg($namespace);
 
-
-        // Connect to the host using the specified namespace
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $connection = $this->com->ConnectServer($this->getHost(), $namespace, $this->getDomain() . $this->getUsername(), $this->password);
-        } else {
-            $namespacePrepared = escapeshellarg($namespace);
-            $connection = "wmic -U " . $this->getDomain() . $this->getUsername() . " --password=" . $this->password . " //" . $this->getHost() . " --namespace=" . $namespacePrepared . " ";
-        }
+        $connection = "wmic -U " . $this->getDomain() . $this->getUsername() . " --password=" . $this->password . " //" . $this->getHost() . " --namespace=" . $namespacePrepared . " ";
 
         if ($connection) {
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                // Set the impersonation level
-                $connection->Security_->ImpersonationLevel = (int) $level;
-            }
+
 
             // Set the connection
             $this->setConnection(new Connection($connection));
@@ -109,17 +84,21 @@ class Wmi implements WmiInterface {
         return false;
     }
 
+    public function getConnection(){
+        
+    }
+    
     /**
-     * Returns the current connection to the host.
+     * Sets the current connection.
      *
-     * @return bool|Connection
+     * @param ConnectionInterface $connection
+     *
+     * @return $this
      */
-    public function getConnection() {
-        if ($this->connection instanceof ConnectionInterface) {
-            return $this->connection;
-        }
+    public function setConnection(ConnectionInterface $connection) {
+        $this->connection = $connection;
 
-        return false;
+        return $this;
     }
 
     /**
@@ -147,19 +126,6 @@ class Wmi implements WmiInterface {
      */
     public function getUsername() {
         return $this->username;
-    }
-
-    /**
-     * Sets the current connection.
-     *
-     * @param ConnectionInterface $connection
-     *
-     * @return $this
-     */
-    public function setConnection(ConnectionInterface $connection) {
-        $this->connection = $connection;
-
-        return $this;
     }
 
     /**

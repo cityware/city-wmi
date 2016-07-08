@@ -8,8 +8,8 @@ use Cityware\Wmi\Processors\Registry;
 use Cityware\Wmi\Processors\Software;
 use Cityware\Wmi\Query\Builder;
 
-class Connection implements ConnectionInterface
-{
+class Connection implements ConnectionInterface {
+
     /**
      * The current connection.
      *
@@ -18,13 +18,23 @@ class Connection implements ConnectionInterface
     private $connection;
 
     /**
+     * The current connection.
+     *
+     * @var mixed
+     */
+    private $connectionString;
+
+    /**
      * Constructor.
      *
      * @param mixed $connection
      */
-    public function __construct($connection)
-    {
-        $this->connection = $connection;
+    public function __construct($connection) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $this->connection = $connection;
+        } else {
+            $this->connectionString = $connection;
+        }
     }
 
     /**
@@ -32,9 +42,12 @@ class Connection implements ConnectionInterface
      *
      * @return mixed
      */
-    public function get()
-    {
-        return $this->connection;
+    public function get() {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return $this->connection;
+        } else {
+            return $this->connectionString;
+        }
     }
 
     /**
@@ -42,8 +55,7 @@ class Connection implements ConnectionInterface
      *
      * @return Registry
      */
-    public function registry()
-    {
+    public function registry() {
         return new Registry($this);
     }
 
@@ -52,8 +64,7 @@ class Connection implements ConnectionInterface
      *
      * @return Software
      */
-    public function software()
-    {
+    public function software() {
         return new Software($this);
     }
 
@@ -62,8 +73,7 @@ class Connection implements ConnectionInterface
      *
      * @return Processors
      */
-    public function processors()
-    {
+    public function processors() {
         return new Processors($this);
     }
 
@@ -72,8 +82,7 @@ class Connection implements ConnectionInterface
      *
      * @return HardDisks
      */
-    public function hardDisks()
-    {
+    public function hardDisks() {
         return new HardDisks($this);
     }
 
@@ -84,9 +93,41 @@ class Connection implements ConnectionInterface
      *
      * @return mixed
      */
-    public function query($query)
-    {
-        return $this->connection->ExecQuery($query);
+    public function query($query) {
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            return $this->connection->ExecQuery($query);
+        } else {
+            $execString = $this->connectionString . '"' . $query . '"';
+            $aReturn = Array();
+            $inc = $wmiout = $execstatus = null;
+            exec($execString, $wmiout, $execstatus);
+            $wmiCount = count($wmiout);
+
+            if ($wmiCount > 0) {
+                $names = explode('|', $wmiout[1]); // build the names list to dymanically output it
+                for ($i = 2; $i < $wmiCount; $i++) { // dynamically output the key:value pairs to suit cacti
+                    $data = explode('|', $wmiout[$i]);
+                    $j = 0;
+                    $inc = $i - 2;
+                    $aReturn[$inc] = new \stdClass();
+                    foreach ($data as $item) {
+                        $jIndex = $j++;
+                        if (isset($names[$jIndex])) {
+                            $objName = $names[$jIndex];
+
+                            $aReplace = array(':', '_', '  ', '   ', '    ', '     ', '      ', '       ', '        ', '         ', '          ', '           ', '            ');
+                            $aReturn[$inc]->$objName = str_replace($aReplace, ' ', $item);
+                        } else {
+                            $j = $jIndex - 1;
+                        }
+                    }
+                }
+            }
+            $stdObjReturn = (object) $aReturn;
+
+            return $stdObjReturn;
+        }
     }
 
     /**
@@ -94,8 +135,8 @@ class Connection implements ConnectionInterface
      *
      * @return Builder
      */
-    public function newQuery()
-    {
+    public function newQuery() {
         return new Builder($this);
     }
+
 }
