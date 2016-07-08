@@ -115,9 +115,11 @@ class Connection implements ConnectionInterface {
                         $jIndex = $j++;
                         if (isset($names[$jIndex])) {
                             $objName = $names[$jIndex];
-
                             $aReplace = array(':', '_', '  ', '   ', '    ', '     ', '      ', '       ', '        ', '         ', '          ', '           ', '            ');
-                            $aReturn[$inc]->$objName = str_replace($aReplace, ' ', $item);
+                            $aReplace2 = array('(null)', 'True', 'False');
+                            $preparedData = str_replace($aReplace2, array(null, true, false), str_replace($aReplace, ' ', $item));
+
+                            $aReturn[$inc]->$objName = $preparedData;
                         } else {
                             $j = $jIndex - 1;
                         }
