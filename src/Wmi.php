@@ -137,7 +137,7 @@ class Wmi implements WmiInterface {
      * @return string
      */
     public function getDomain() {
-        return (!empty($this->domain)) ? $this->domain . "\\" : null;
+        return (!empty($this->domain)) ? $this->domain . "/" : null;
     }
 
     /**
